@@ -7,4 +7,6 @@ public interface Subscriber<T> {
     void onNext(T var1);
 
     void onComplete();
+
+    void onError(Throwable t);
 }

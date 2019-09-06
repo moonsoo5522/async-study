@@ -11,6 +11,10 @@ public class ArraySubscription<T> implements Subscription {
 
     @Override
     public void request(long var1) {
+        if(values == null || values.length == 0) {
+            actual.onError(new NullPointerException("ㅎㅎ"));
+            return;
+        }
         for(T data : values) {
             actual.onNext(data);
         }

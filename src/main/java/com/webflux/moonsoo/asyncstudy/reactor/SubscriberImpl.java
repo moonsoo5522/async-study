@@ -23,4 +23,9 @@ public class SubscriberImpl<T> implements Subscriber<T> {
     public void onComplete() {
         System.out.println("onComplete called");
     }
+
+    @Override
+    public void onError(Throwable t) {
+        t.printStackTrace();
+    }
 }
