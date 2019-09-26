@@ -15,6 +15,11 @@ public abstract class Flux<T> implements Publisher<T> {
         return lastFlux;
     }
 
+    public <T> Flux<T> take(long n) {
+        lastFlux = new FluxTake(this, n);
+        return lastFlux;
+    }
+
     public void subscribe(Consumer<? super T> consumer) {
         Objects.requireNonNull(consumer, "consumer");
         lastFlux.subscribe(new SubscriberImpl(consumer));

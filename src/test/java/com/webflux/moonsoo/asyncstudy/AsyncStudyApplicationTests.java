@@ -15,7 +15,7 @@ public class AsyncStudyApplicationTests {
         Flux<String> sss = Flux.just("sss");
         sss.subscribe(System.out::println);
 
-        Flux<String> array = Flux.just("a", "b", "cc");
+        Flux<String> array = Flux.just("a", "b", "cc").take(2).take(1);
         array.subscribe(System.out::println);
 
     }
