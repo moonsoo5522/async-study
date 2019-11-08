@@ -26,6 +26,7 @@ public class FluxTake<T> extends FluxOperator<T, T>{
 
         @Override
         public void request(long var1) {
+            System.out.println("request thread : " + Thread.currentThread().getName());
             parentS.request(var1);
         }
 

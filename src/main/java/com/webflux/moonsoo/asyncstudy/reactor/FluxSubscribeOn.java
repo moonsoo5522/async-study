@@ -38,7 +38,6 @@ public class FluxSubscribeOn<T> extends FluxOperator<T, T>  {
 
         @Override
         public void request(long var1) {
-            System.out.println("request thread : " + Thread.currentThread().getName());
             parentSubscription.request(var1);
         }
 
