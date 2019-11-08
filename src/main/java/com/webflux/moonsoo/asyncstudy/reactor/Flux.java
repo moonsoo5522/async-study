@@ -1,5 +1,7 @@
 package com.webflux.moonsoo.asyncstudy.reactor;
 
+import com.webflux.moonsoo.asyncstudy.reactor.scheduler.Scheduler;
+
 import java.util.Objects;
 
 public abstract class Flux<T> implements Publisher<T> {
@@ -23,6 +25,10 @@ public abstract class Flux<T> implements Publisher<T> {
     public void subscribe(Consumer<? super T> consumer) {
         Objects.requireNonNull(consumer, "consumer");
         lastFlux.subscribe(new SubscriberImpl(consumer));
+    }
+
+    public <T> Flux<T> subscribeOn(Scheduler scheduler) {
+        return lastFlux = new FluxSubscribeOn(this, scheduler);
     }
 
     public abstract void subscribe(Subscriber<? super T> sub);

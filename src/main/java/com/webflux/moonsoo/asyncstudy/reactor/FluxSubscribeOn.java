@@ -1,37 +1,44 @@
 package com.webflux.moonsoo.asyncstudy.reactor;
 
+import com.webflux.moonsoo.asyncstudy.reactor.scheduler.Scheduler;
+import com.webflux.moonsoo.asyncstudy.reactor.scheduler.Worker;
+
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class FluxSubscribeOn<T> extends FluxOperator<T, T>  {
-    private ExecutorService execService = Executors.newFixedThreadPool(10);
     private Flux<? extends T> source;
+    private Scheduler scheduler;
 
 
-    protected FluxSubscribeOn(Flux<? extends T> source) {
+    protected FluxSubscribeOn(Flux<? extends T> source, Scheduler scheduler) {
         super(source);
         this.source = source;
+        this.scheduler = scheduler;
     }
 
     @Override
     public void subscribe(Subscriber<? super T> sub) {
-        SubscribeOnSubscriber<T> parentSubscriber = new SubscribeOnSubscriber<>(sub);
+        SubscribeOnSubscriber<T> parentSubscriber = new SubscribeOnSubscriber<>(sub, source);
         //sub.onSubscribe(parentSubscriber);
-        execService.execute(parentSubscriber);
+        scheduler.createWorker().schedule(parentSubscriber);
     }
 
-    class SubscribeOnSubscriber<T> implements Subscriber<T>, Subscription, Runnable {
+     class SubscribeOnSubscriber<T> implements Subscriber<T>, Subscription, Runnable {
         private Subscriber<? super T> actual;
         private Subscription parentSubscription;
+        private Publisher<? extends T> source;
 
-        public SubscribeOnSubscriber(Subscriber<? super T> sub) {
+        SubscribeOnSubscriber(Subscriber<? super T> sub, Publisher<? extends T> source) {
             this.actual = sub;
+            this.source = source;
         }
 
 
         @Override
         public void request(long var1) {
+            System.out.println("request thread : " + Thread.currentThread().getName());
             parentSubscription.request(var1);
         }
 
