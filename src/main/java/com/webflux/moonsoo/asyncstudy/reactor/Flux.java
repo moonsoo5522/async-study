@@ -34,6 +34,4 @@ public abstract class Flux<T> implements Publisher<T> {
     public <T> Flux<T> publishOn(Scheduler scheduler) {
         return lastFlux = new FluxPublishOn(this, scheduler);
     }
-
-    public abstract void subscribe(Subscriber<? super T> sub);
 }
